@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Collections;
@@ -34,12 +33,13 @@ public class SecurityConfig {
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
-    private final String[] WHITE_LIST = {
+    private final String[] whiteList = {
             "/swagger*/**",
             "/v3/api-docs/**",
             "/console/**",
             "/error",
-            API_VERSION_PATH + LOGIN_PATH
+            API_VERSION_PATH + LOGIN_PATH,
+            "/api/owners/**",
     };
 
     @Bean
@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     try {
                         // Create MvcRequestMatchers for MVC endpoints
-                        for (String pattern : WHITE_LIST) {
+                        for (String pattern : whiteList) {
                             auth.requestMatchers(new MvcRequestMatcher(introspector, pattern)).permitAll();
                         }
                     } catch (Exception e) {
