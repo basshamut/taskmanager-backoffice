@@ -79,11 +79,11 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>9.0.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
@@ -99,6 +99,13 @@
             <artifactId>mapstruct</artifactId>
             <version>1.5.3.Final</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.16</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

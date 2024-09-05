@@ -2,6 +2,7 @@ package com.resimanager.backoffice.config.security;
 
 import com.resimanager.backoffice.config.security.jwt.JWTAuthorizationFilter;
 import com.resimanager.backoffice.config.security.provider.CustomAuthenticationProvider;
+import com.resimanager.backoffice.exception.MvcRequestMatcherConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Collections;
@@ -33,13 +35,12 @@ public class SecurityConfig {
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
-    private final String[] whiteList = {
+    private final String[] WHITE_LIST = {
             "/swagger*/**",
             "/v3/api-docs/**",
             "/console/**",
             "/error",
-            API_VERSION_PATH + LOGIN_PATH,
-            "/api/owners/**",
+            API_VERSION_PATH + LOGIN_PATH
     };
 
     @Bean
@@ -47,20 +48,16 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     try {
-                        // Create MvcRequestMatchers for MVC endpoints
-                        for (String pattern : whiteList) {
+                        for (String pattern : WHITE_LIST) {
                             auth.requestMatchers(new MvcRequestMatcher(introspector, pattern)).permitAll();
                         }
                     } catch (Exception e) {
-                        throw new RuntimeException("Failed to configure MVC request matchers", e);
+                        throw new MvcRequestMatcherConfigurationException("Failed to configure MVC request matchers", e);
                     }
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-        ;
-
-        http.headers().frameOptions().disable(); // Allow H2 console (if needed for development)
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()));
         return http.build();
     }
 

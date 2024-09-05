@@ -1,12 +1,15 @@
 package com.resimanager.backoffice.service;
 
+import com.resimanager.backoffice.exception.ServiceException;
 import lombok.AllArgsConstructor;
 import com.resimanager.backoffice.dto.AuthDto;
 import com.resimanager.backoffice.persistance.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,19 +20,27 @@ public class UserService {
     private final UserRepository userRepository;
 
     public AuthDto loadUserByUsername(String username) {
-        //TODO enchufar aqui Auth0
-        final Set<String> authorities = new HashSet<>();
 
-        var user = userRepository.findByEmail(username);
+        //TODO quemamos aqui el usuario para que no falle el login pero se debe obtener de la base de datos
+        var pass = new String(Base64.getDecoder().decode("JDJhJDEwJGtoQmg0cE9FSHpJS0M3VTZNc1A5dmUyTU9hYkpFTFpzS0N3dG9YWkUyRDVzNFBJakRYdVdt"));
+        return AuthDto.builder()
+                .username("test@test.com")
+                .password(pass)
+                .authorities(new HashSet<>(List.of("ROLE_ADMIN")))
+                .build();
 
-        if (Objects.nonNull(user)) {
-            authorities.add("ROLE_" + user.getRole());
-            var pass = new String(Base64.getDecoder().decode(user.getPassword()));
-
-            return new AuthDto(user.getEmail(), pass, authorities);
-        }
-
-        return null;
+//        final Set<String> authorities = new HashSet<>();
+//
+//        try {
+//            var user = userRepository.findByEmail(username);
+//
+//            authorities.add("ROLE_" + user.getRole());
+//            var pass = Arrays.toString(Base64.getDecoder().decode(user.getPassword()));
+//
+//            return new AuthDto(user.getEmail(), pass, authorities);
+//        } catch (Exception e) {
+//            return null;
+//        }
     }
 
 }

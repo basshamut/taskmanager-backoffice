@@ -1,12 +1,10 @@
 package com.resimanager.backoffice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.resimanager.backoffice.dto.OwnerRequestDto;
 import com.resimanager.backoffice.dto.OwnerResponseDto;
 import com.resimanager.backoffice.exception.ServiceException;
 import com.resimanager.backoffice.persistance.entity.Owner;
 import com.resimanager.backoffice.service.OwnerService;
-import com.resimanager.backoffice.utils.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,13 +35,17 @@ public class OwnerController {
 
     @GetMapping
     public ResponseEntity<Page<OwnerResponseDto>> getAllOwners(@RequestParam int page, @RequestParam int size) {
-        if (!Tools.isValidPagination(page, size)) {
+        if (!isValidPagination(page, size)) {
             throw new ServiceException("Invalid pagination parameters", HttpStatus.BAD_REQUEST.value());
         }
 
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<OwnerResponseDto> owners = ownerService.getAllOwners(pageable);
         return new ResponseEntity<>(owners, HttpStatus.OK);
+    }
+
+    private static boolean isValidPagination(int page, int size) {
+        return page >= 0 && size > 0;
     }
 
     @GetMapping("/{id}")
@@ -74,5 +76,4 @@ public class OwnerController {
         ownerService.deleteOwner(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

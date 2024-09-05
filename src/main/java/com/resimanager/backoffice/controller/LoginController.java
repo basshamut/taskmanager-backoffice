@@ -1,12 +1,11 @@
 package com.resimanager.backoffice.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.resimanager.backoffice.dto.LoginRequestJson;
+import com.resimanager.backoffice.dto.LoginResponseJson;
+import com.resimanager.backoffice.service.JwtService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import com.resimanager.backoffice.dto.LoginRequestJson;
-import com.resimanager.backoffice.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,14 +28,13 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
-    @PostMapping("/login")
-    public ResponseEntity<JsonNode> login(@RequestBody @NotNull LoginRequestJson loginRequestJson) throws JsonProcessingException {
+
+    @PostMapping(value = "/login", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<LoginResponseJson> login(@RequestBody @NotNull LoginRequestJson loginRequestJson) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestJson.getUsername(), loginRequestJson.getPassword()));
         if (authentication.isAuthenticated()) {
             var token = jwtService.generateToken(authentication);
-            String json = "{\"token\":\"" + token + "\"}";
-            var responseMapped = objectMapper.readTree(json);
-            return ResponseEntity.ok().body(responseMapped);
+            return ResponseEntity.ok().body(LoginResponseJson.builder().token(token).type("Bearer").build());
         } else {
             throw new UsernameNotFoundException("invalid user request");
         }
