@@ -1,8 +1,8 @@
 -- Tabla de propietarios
 CREATE TABLE owners (
-    owner_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    phone VARCHAR(15),
-    email VARCHAR(100),
-    address TEXT
+    task_id SERIAL PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
+    description VARCHAR(256) NOT NULL,
+    dueDate VARCHAR(15),
+    state VARCHAR(20) NOT NULL
 );

@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OwnerRequestDto {
-
-    private String name;
-    private String phone;
-    private String email;
-    private String address;
+public class TaskRequestDto {
+    private String title;
+    private String description;
+    private String dueDate;
+    private String state;
 }
 

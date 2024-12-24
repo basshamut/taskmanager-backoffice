@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OwnerResponseDto {
-
+public class TaskResponseDto {
     private Long id;
-    private String name;
-    private String phone;
-    private String email;
-    private String address;
+    private String title;
+    private String description;
+    private String dueDate;
+    private String state;
 }
 
