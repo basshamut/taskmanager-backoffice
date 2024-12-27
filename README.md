@@ -1,5 +1,5 @@
 ### Autenticación
-Se implementó autenticación básica con Spring Security.
+Se implementó autenticación con JWT usando Spring Security.
 
 (Solo para pruebas)
 - **Username:** `test@test.com`
