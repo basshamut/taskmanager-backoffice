@@ -1,5 +1,13 @@
 server:
-  port: 5000
+  port: 8080
 spring:
   profiles:
-    active: test
+    active: ${PROFILE_ACTIVE:local}
+  flyway:
+    baseline-on-migrate: true
+    locations: classpath:migrations
+app:
+  security:
+    issuer-info: ${SECURITY_ISSUER_INFO}
+    super-secret-key: ${SECURITY_SUPER_SECRET_KEY}
+    token-expiration-time-in-minutes: ${SECURITY_EXPIRATION_TIME_IN_MINUTES}
